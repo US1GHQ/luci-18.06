@@ -232,6 +232,34 @@ if hwtype == "mac80211" then
 	legacyrates = s:taboption("advanced", Flag, "legacy_rates", translate("Allow legacy 802.11b rates"))
 	legacyrates.rmempty = false
 	legacyrates.default = "1"
+    
+    -------#Advanced-----------------
+	chanbw = s:taboption("advanced", ListValue, "chanbw", translate("Channel width"))
+	chanbw:value("20", "20MHz")
+	chanbw:value("10", "10MHz")
+	chanbw:value("5", "5MHz")
+	chanbw.default = "20"
+    ------Antenna--------------------
+	ant1 = s:taboption("advanced", ListValue, "txantenna", translate("TX Antenna"))
+	ant1.widget = "radio"
+	ant1.orientation = "horizontal"
+	ant1:depends("diversity", "")
+	ant1:value("all", translate("all"))
+	ant1:value("1", translate("Antenna 1"))
+	ant1:value("2", translate("Antenna 2"))
+	ant1:value("3", translate("Antenna 3"))
+	ant1.default = "all"
+
+	ant2 = s:taboption("advanced", ListValue, "rxantenna", translate("RX Antenna"))
+	ant2.widget = "radio"
+	ant2.orientation = "horizontal"
+	ant2:depends("diversity", "")
+	ant2:value("all", translate("all"))
+	ant2:value("1", translate("Antenna 1"))
+	ant2:value("2", translate("Antenna 2"))
+	ant2:value("3", translate("Antenna 3"))
+	ant2.default = "all"
+
 
 	s:taboption("advanced", Value, "distance", translate("Distance Optimization"),
 		translate("Distance to farthest network member in meters."))
@@ -250,6 +278,9 @@ if hwtype == "mac80211" then
 
 	s:taboption("advanced", Value, "frag", translate("Fragmentation Threshold"))
 	s:taboption("advanced", Value, "rts", translate("RTS/CTS Threshold"))
+    s:taboption("advanced", Value, "basic_rate", translate("Basic Rates"))
+    s:taboption("advanced", Flag, "country_ie", "802.11d")
+    s:taboption("advanced", Flag, "doth", "802.11h")
 	
 	s:taboption("advanced", Flag, "noscan", translate("Force 40MHz mode"),
 		translate("Always use 40MHz channels even if the secondary channel overlaps. Using this option does not comply with IEEE 802.11n-2009!")).optional = true
@@ -492,7 +523,7 @@ if hwtype == "mac80211" then
 	wmm:depends({mode="ap-wds"})
 	wmm.default = wmm.enabled
 
-	isolate = s:taboption("advanced", Flag, "isolate", translate("Isolate Clients"),
+    isolate = s:taboption("advanced", Flag, "isolate", translate("Isolate Clients"),
 	 translate("Prevents client-to-client communication"))
 	isolate:depends({mode="ap"})
 	isolate:depends({mode="ap-wds"})
