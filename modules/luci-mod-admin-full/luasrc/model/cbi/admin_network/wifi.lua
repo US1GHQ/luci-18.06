@@ -232,37 +232,51 @@ if hwtype == "mac80211" then
 	legacyrates = s:taboption("advanced", Flag, "legacy_rates", translate("Allow legacy 802.11b rates"))
 	legacyrates.rmempty = false
 	legacyrates.default = "1"
-    
-    -------#Advanced-----------------
+
+-----------TDMA-----------------
+	tdma = s:taboption("advanced", ListValue, "", translate("TDMA Mode"), translate("Currently in testing mode"))
+	tdma:value("fdd", "TDMA-FDD")
+	tdma:value("tdd", "TDMA-TDD")
+	tdma:value("off", "TDMA-OFF")
+	tdma.default = "off"
+
+-----------Advanced-----------------
 	chanbw = s:taboption("advanced", ListValue, "chanbw", translate("Channel width"))
 	chanbw:value("20", "20MHz")
 	chanbw:value("10", "10MHz")
 	chanbw:value("5", "5MHz")
 	chanbw.default = "20"
-    ------Antenna--------------------
+
+-----------Antenna TX--------------------
 	ant1 = s:taboption("advanced", ListValue, "txantenna", translate("TX Antenna"))
 	ant1.widget = "radio"
 	ant1.orientation = "horizontal"
-	ant1:depends("diversity", "")
 	ant1:value("all", translate("all"))
 	ant1:value("1", translate("Antenna 1"))
 	ant1:value("2", translate("Antenna 2"))
 	ant1:value("3", translate("Antenna 3"))
 	ant1.default = "all"
 
+----------Antenna RX -------------------
 	ant2 = s:taboption("advanced", ListValue, "rxantenna", translate("RX Antenna"))
 	ant2.widget = "radio"
 	ant2.orientation = "horizontal"
-	ant2:depends("diversity", "")
 	ant2:value("all", translate("all"))
 	ant2:value("1", translate("Antenna 1"))
 	ant2:value("2", translate("Antenna 2"))
 	ant2:value("3", translate("Antenna 3"))
 	ant2.default = "all"
 
+--------Diversity-------------------
+	diver = s:taboption("advanced", ListValue, "diversity", translate("Diversity"))
+	diver.widget = "radio"
+	diver.orientation = "horizontal"
+	diver:value("0", translate("OFF"))
+	diver:value("1", translate("ON"))
+	diver.default = "1"
 
 	s:taboption("advanced", Value, "distance", translate("Distance Optimization"),
-		translate("Distance to farthest network member in meters."))
+	translate("Distance to farthest network member in meters."))
 
 	-- external antenna profiles
 	local eal = iw and iw.extant
@@ -539,9 +553,18 @@ if hwtype == "mac80211" then
 	dtim_period.placeholder = 2
 	dtim_period.datatype = "range(1,255)"
 
+	max_inactivity = s:taboption("advanced", Value, "max_inactivity", translate("Max Inactivity"), translate("Station inactivity limit in seconds"))
+	max_inactivity.optional = true
+	max_inactivity.placeholder = 300
+	max_inactivity.datatype = "range(1,3600)"
+
 	disassoc_low_ack = s:taboption("advanced", Flag, "disassoc_low_ack", translate("Disassociate On Low Acknowledgement"),
 		translate("Allow AP mode to disconnect STAs based on low ACK condition"))
 	disassoc_low_ack.default = disassoc_low_ack.enabled
+
+	skip_inactivity_poll = s:taboption("advanced", Flag, "skip_inactivity_poll", translate("Skip Inactivity Poll"),
+		translate("The inactivity polling can be disabled to disconnect stations based on inactivity timeout so that idle stations are more likely to be disconnected even if they are still in range of the AP."))
+	skip_inactivity_poll = skip_inactivity_poll.disabled
 end
 
 
