@@ -245,6 +245,8 @@ if hwtype == "mac80211" then
 	chanbw:value("20", "20MHz")
 	chanbw:value("10", "10MHz")
 	chanbw:value("5", "5MHz")
+    chanbw:value("2", "2MHz")
+    chanbw:value("1", "1MHz")
 	chanbw.default = "20"
 
 -----------Antenna TX--------------------
